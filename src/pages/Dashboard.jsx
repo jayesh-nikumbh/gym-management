@@ -152,7 +152,7 @@ export default function Dashboard() {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 rounded-full ${
+            className={`px-6 py-2 rounded-full cursor-pointer ${
               activeTab === tab ? "bg-black text-white" : "bg-white border"
             }`}
           >
@@ -161,7 +161,11 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* ================= MEMBERS ================= */}
+      
+
+      {activeTab === "members" && (
+        <>
+        {/* ================= MEMBERS ================= */}
       <div className="flex flex-wrap gap-4 mb-6">
         {/* Search */}
         <input
@@ -169,14 +173,14 @@ export default function Dashboard() {
           placeholder="Search by name..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="px-4 py-2 border rounded-lg w-60"
+          className="px-4 py-2 border rounded-lg w-60 focus:border-green-500 focus:outline-none hover:border-red-500 transition cursor-pointer"
         />
 
         {/* Role Filter */}
         <select
           value={roleFilter}
           onChange={(e) => setRoleFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg"
+          className="px-4 py-2 border rounded-lg  focus:border-green-500 focus:outline-none hover:border-red-500 transition cursor-pointer"
         >
           <option value="all">All Roles</option>
           <option value="admin">Admin</option>
@@ -187,7 +191,7 @@ export default function Dashboard() {
         <select
           value={planFilter}
           onChange={(e) => setPlanFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg"
+          className="px-4 py-2 border rounded-lg  focus:border-green-500 focus:outline-none hover:border-red-500 transition cursor-pointer"
         >
           <option value="all">All Plans</option>
           <option value="basic">Basic</option>
@@ -195,9 +199,6 @@ export default function Dashboard() {
           <option value="premium">Premium</option>
         </select>
       </div>
-
-      {activeTab === "members" && (
-        <>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -279,7 +280,7 @@ export default function Dashboard() {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
-                className="px-3 py-1 border rounded-lg disabled:opacity-40"
+                className="px-3 py-1 cursor-pointer border rounded-lg disabled:opacity-40 hover:bg-red-500 transition hover:text-white hover:border-white-800 ease-in-out"
               >
                 Prev
               </button>
@@ -288,7 +289,7 @@ export default function Dashboard() {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`px-3 py-1 rounded-lg border ${
+                  className={`px-3 py-1 rounded-lg border cursor-pointer hover:bg-black hover:text-white transition ease-in-out ${
                     currentPage === i + 1 ? "bg-black text-white" : "bg-white"
                   }`}
                 >
@@ -299,7 +300,7 @@ export default function Dashboard() {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-3 py-1 border rounded-lg disabled:opacity-40"
+                className="px-3 py-1 border rounded-lg disabled:opacity-40 cursor-pointer hover:bg-green-400 transition hover:text-white hover:border-white-800"
               >
                 Next
               </button>
