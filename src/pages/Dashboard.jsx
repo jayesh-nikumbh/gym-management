@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import MemberStatsChart from "../components/MemberStatsChart";
 import AttendanceChart from "../components/AttendanceChart";
 import toast from "react-hot-toast";
@@ -29,6 +29,10 @@ export default function Dashboard() {
 
   const ITEMS_PER_PAGE = 4;
   const [currentPage, setCurrentPage] = useState(1);
+
+  const ROW_HEIGHT = 72; // px (approx)
+  const TABLE_MIN_HEIGHT = ITEMS_PER_PAGE * ROW_HEIGHT;
+
 
   /* ================= FETCH USERS ================= */
   useEffect(() => {
@@ -160,9 +164,6 @@ export default function Dashboard() {
           </button>
         ))}
       </div>
-
-      
-
       {activeTab === "members" && (
         <>
         {/* ================= MEMBERS ================= */}
@@ -203,6 +204,7 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-white rounded-2xl shadow-md overflow-hidden"
+            style={{ minHeight: TABLE_MIN_HEIGHT }}
           >
             {loading ? (
               <p className="p-6 text-center text-gray-500">
@@ -210,7 +212,7 @@ export default function Dashboard() {
               </p>
             ) : (
               <div className="w-full overflow-x-auto">
-                <table className="w-full border-collapse">
+                <motion.table layout className="w-full border-collapse">
                   <thead className="bg-black text-white">
                     <tr>
                       <th className="px-6 py-4 text-left">Name</th>
@@ -222,11 +224,20 @@ export default function Dashboard() {
                     </tr>
                   </thead>
 
-                  <tbody>
+                  <AnimatePresence mode="wait">
+                  <motion.tbody
+                    key={currentPage}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.25, ease: "easeInOut" }}
+                  >
+
                     {paginatedMembers.map((u) => (
-                      <tr
-                        key={u._id}
-                        className="border-b hover:bg-gray-50 transition"
+                      <motion.tr
+                          layout
+                          key={u._id}
+                          className="border-b hover:bg-gray-50 transition"
                       >
                         <td className="px-6 py-4 font-medium">{u.name}</td>
                         <td className="px-6 py-4">{u.email}</td>
@@ -268,10 +279,11 @@ export default function Dashboard() {
                             </button>
                           </div>
                         </td>
-                      </tr>
+                      </motion.tr>
                     ))}
-                  </tbody>
-                </table>
+                    </motion.tbody>
+                  </ AnimatePresence>
+                </motion.table>
               </div>
             )}
           </motion.div>
