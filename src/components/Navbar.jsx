@@ -89,7 +89,7 @@ export default function Navbar() {
           </div>
 
           {/* DESKTOP MENU */}
-          <div className="hidden md:flex gap-8 items-center text-gray-900 font-medium "> 
+          <div className="hidden md:flex gap-8 items-center text-gray-900 font-medium"> 
             <NavItem to="/" active={isActive("/")}>
               Home
             </NavItem>

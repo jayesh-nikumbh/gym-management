@@ -45,7 +45,6 @@ export default function Register() {
 
       toast.success("Account created successfully!");
       navigate("/login");
-
     } catch (err) {
       console.log(err);
     }
@@ -58,17 +57,24 @@ export default function Register() {
         animate={{ opacity: 1, y: 0 }}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8"
       >
-        <h2 className="text-3xl font-bold text-center mb-2">
+        <h2 className="text-3xl font-bold text-center mb-2 text-black">
           Create Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-
           <input
             name="name"
             type="text"
             placeholder="Full Name"
-            className="w-full p-3 border rounded-lg"
+            className="w-full p-3 rounded-lg border 
+                      border-gray-300 dark:border-gray-600
+                      bg-white dark:bg-gray-900
+                      text-black dark:text-white
+                      placeholder-gray-400 dark:placeholder-gray-400
+                      focus:outline-none 
+                      focus:border-red-500 dark:focus:border-red-500
+                      focus:ring-2 focus:ring-red-500/40
+                      transition"
             onChange={handleChange}
             required
           />
@@ -77,7 +83,16 @@ export default function Register() {
             name="email"
             type="email"
             placeholder="Email address"
-            className="w-full p-3 border rounded-lg"
+            className="w-full p-3 rounded-lg border 
+border-gray-300 dark:border-gray-600
+bg-white dark:bg-gray-900
+text-black dark:text-white
+placeholder-gray-400 dark:placeholder-gray-400
+focus:outline-none 
+focus:border-red-500 dark:focus:border-red-500
+focus:ring-2 focus:ring-red-500/40
+transition
+"
             onChange={handleChange}
             required
           />
@@ -86,7 +101,16 @@ export default function Register() {
             name="password"
             type="password"
             placeholder="Password"
-            className="w-full p-3 border rounded-lg"
+            className="w-full p-3 rounded-lg border 
+border-gray-300 dark:border-gray-600
+bg-white dark:bg-gray-900
+text-black dark:text-white
+placeholder-gray-400 dark:placeholder-gray-400
+focus:outline-none 
+focus:border-red-500 dark:focus:border-red-500
+focus:ring-2 focus:ring-red-500/40
+transition
+"
             onChange={handleChange}
             required
           />
@@ -95,7 +119,16 @@ export default function Register() {
             name="confirmPassword"
             type="password"
             placeholder="Confirm Password"
-            className="w-full p-3 border rounded-lg"
+            className="w-full p-3 rounded-lg border 
+border-gray-300 dark:border-gray-600
+bg-white dark:bg-gray-900
+text-black dark:text-white
+placeholder-gray-400 dark:placeholder-gray-400
+focus:outline-none 
+focus:border-red-500 dark:focus:border-red-500
+focus:ring-2 focus:ring-red-500/40
+transition
+"
             onChange={handleChange}
             required
           />

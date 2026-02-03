@@ -124,7 +124,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6 pt-24">
+    <div className="min-h-screen bg-gray-100 p-6 pt-24 text-black" >
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* ================= TABS ================= */}

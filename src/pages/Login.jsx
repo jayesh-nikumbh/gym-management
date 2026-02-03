@@ -60,7 +60,7 @@ export default function Login() {
         transition={{ duration: 0.5 }}
         className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8"
       >
-        <h2 className="text-3xl font-bold text-center mb-2">
+        <h2 className="text-3xl font-bold text-center mb-2 text-black">
           Welcome Back
         </h2>
         <p className="text-center text-gray-500 mb-6">
@@ -72,7 +72,16 @@ export default function Login() {
             name="email"
             type="email"
             placeholder="Email address"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-3 rounded-lg border 
+border-gray-300 dark:border-gray-600
+bg-white dark:bg-gray-900
+text-black dark:text-white
+placeholder-gray-400 dark:placeholder-gray-400
+focus:outline-none 
+focus:border-red-500 dark:focus:border-red-500
+focus:ring-2 focus:ring-red-500/40
+transition
+"
             onChange={handleChange}
             required
           />
@@ -81,7 +90,16 @@ export default function Login() {
             name="password"
             type="password"
             placeholder="Password"
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+            className="w-full p-3 rounded-lg border 
+border-gray-300 dark:border-gray-600
+bg-white dark:bg-gray-900
+text-black dark:text-white
+placeholder-gray-400 dark:placeholder-gray-400
+focus:outline-none 
+focus:border-red-500 dark:focus:border-red-500
+focus:ring-2 focus:ring-red-500/40
+transition
+"
             onChange={handleChange}
             required
           />
