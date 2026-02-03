@@ -22,6 +22,14 @@ export default function Dashboard() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
 
+  /* ================= FILTERS & SEARCH ================= */
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [planFilter, setPlanFilter] = useState("all");
+
+  const ITEMS_PER_PAGE = 4;
+  const [currentPage, setCurrentPage] = useState(1);
+
   /* ================= FETCH USERS ================= */
   useEffect(() => {
     const fetchUsers = async () => {
@@ -31,10 +39,10 @@ export default function Dashboard() {
         setMembers(data);
 
         // ================= DYNAMIC ATTENDANCE =================
-        const formattedData = data.map(u => ({
+        const formattedData = data.map((u) => ({
           id: u._id,
           name: u.name,
-          attendance: u.attendance.map(a => {
+          attendance: u.attendance.map((a) => {
             const dateObj = new Date(a.date);
             const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
             return {
@@ -45,7 +53,6 @@ export default function Dashboard() {
         }));
 
         setAttendanceData(formattedData);
-
       } catch (err) {
         console.log(err);
       } finally {
@@ -81,7 +88,7 @@ export default function Dashboard() {
             role: editUser.role,
             plan: editUser.plan,
           }),
-        }
+        },
       );
 
       if (!res.ok) throw new Error("Update failed");
@@ -89,7 +96,7 @@ export default function Dashboard() {
       const updated = await res.json();
 
       setMembers((prev) =>
-        prev.map((u) => (u._id === updated._id ? updated : u))
+        prev.map((u) => (u._id === updated._id ? updated : u)),
       );
 
       setShowModal(false);
@@ -105,14 +112,12 @@ export default function Dashboard() {
     try {
       const res = await fetch(
         `http://localhost:5000/api/users/${userToDelete._id}`,
-        { method: "DELETE" }
+        { method: "DELETE" },
       );
 
       if (!res.ok) throw new Error("Delete failed");
 
-      setMembers((prev) =>
-        prev.filter((u) => u._id !== userToDelete._id)
-      );
+      setMembers((prev) => prev.filter((u) => u._id !== userToDelete._id));
 
       toast.success(`User "${userToDelete.name}" deleted successfully`);
       setShowDeleteConfirm(false);
@@ -123,8 +128,22 @@ export default function Dashboard() {
     }
   };
 
+  const filteredMembers = members
+    .filter((u) => u.name.toLowerCase().includes(search.toLowerCase()))
+    .filter((u) => (roleFilter === "all" ? true : u.role === roleFilter))
+    .filter((u) => (planFilter === "all" ? true : u.plan === planFilter))
+  const totalPages = Math.ceil(filteredMembers.length / ITEMS_PER_PAGE);
+
+  const paginatedMembers = filteredMembers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, roleFilter, planFilter]);
+
   return (
-    <div className="min-h-screen bg-gray-100 p-6 pt-24 text-black" >
+    <div className="min-h-screen bg-gray-100 p-6 pt-24 text-black">
       <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
 
       {/* ================= TABS ================= */}
@@ -134,9 +153,7 @@ export default function Dashboard() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`px-6 py-2 rounded-full ${
-              activeTab === tab
-                ? "bg-black text-white"
-                : "bg-white border"
+              activeTab === tab ? "bg-black text-white" : "bg-white border"
             }`}
           >
             {tab}
@@ -145,6 +162,40 @@ export default function Dashboard() {
       </div>
 
       {/* ================= MEMBERS ================= */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {/* Search */}
+        <input
+          type="text"
+          placeholder="Search by name..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="px-4 py-2 border rounded-lg w-60"
+        />
+
+        {/* Role Filter */}
+        <select
+          value={roleFilter}
+          onChange={(e) => setRoleFilter(e.target.value)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          <option value="all">All Roles</option>
+          <option value="admin">Admin</option>
+          <option value="user">User</option>
+        </select>
+
+        {/* Plan Filter */}
+        <select
+          value={planFilter}
+          onChange={(e) => setPlanFilter(e.target.value)}
+          className="px-4 py-2 border rounded-lg"
+        >
+          <option value="all">All Plans</option>
+          <option value="basic">Basic</option>
+          <option value="standard">Standard</option>
+          <option value="premium">Premium</option>
+        </select>
+      </div>
+
       {activeTab === "members" && (
         <>
           <motion.div
@@ -158,71 +209,102 @@ export default function Dashboard() {
               </p>
             ) : (
               <div className="w-full overflow-x-auto">
-              <table className="w-full border-collapse">
-                <thead className="bg-black text-white">
-                  <tr>
-                    <th className="px-6 py-4 text-left">Name</th>
-                    <th className="px-6 py-4 text-left">Email</th>
-                    <th className="px-6 py-4 text-center">Attendance</th>
-                    <th className="px-6 py-4 text-center">Role</th>
-                    <th className="px-6 py-4 text-center">Plan</th>
-                    <th className="px-6 py-4 text-center">Actions</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {members.map((u) => (
-                    <tr
-                      key={u._id}
-                      className="border-b hover:bg-gray-50 transition"
-                    >
-                      <td className="px-6 py-4 font-medium">{u.name}</td>
-                      <td className="px-6 py-4">{u.email}</td>
-                      <td className="px-6 py-4 text-center">
-                        {u.attendance?.length || 0}
-                      </td>
-                      <td className="px-6 py-4 text-center capitalize">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            u.role === "admin"
-                              ? "bg-red-100 text-red-600"
-                              : "bg-green-100 text-green-600"
-                          }`}
-                        >
-                          {u.role}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center capitalize">
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100">
-                          {u.plan}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-center">
-                        <div className="flex justify-center gap-3">
-                          <button
-                            onClick={() => openEditModal(u)}
-                            className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => {
-                              setUserToDelete(u);
-                              setShowDeleteConfirm(true);
-                            }}
-                            className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </td>
+                <table className="w-full border-collapse">
+                  <thead className="bg-black text-white">
+                    <tr>
+                      <th className="px-6 py-4 text-left">Name</th>
+                      <th className="px-6 py-4 text-left">Email</th>
+                      <th className="px-6 py-4 text-center">Attendance</th>
+                      <th className="px-6 py-4 text-center">Role</th>
+                      <th className="px-6 py-4 text-center">Plan</th>
+                      <th className="px-6 py-4 text-center">Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+
+                  <tbody>
+                    {paginatedMembers.map((u) => (
+                      <tr
+                        key={u._id}
+                        className="border-b hover:bg-gray-50 transition"
+                      >
+                        <td className="px-6 py-4 font-medium">{u.name}</td>
+                        <td className="px-6 py-4">{u.email}</td>
+                        <td className="px-6 py-4 text-center">
+                          {u.attendance?.length || 0}
+                        </td>
+                        <td className="px-6 py-4 text-center capitalize">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              u.role === "admin"
+                                ? "bg-red-100 text-red-600"
+                                : "bg-green-100 text-green-600"
+                            }`}
+                          >
+                            {u.role}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center capitalize">
+                          <span className="px-3 py-1 rounded-full text-xs font-semibold bg-gray-100">
+                            {u.plan}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          <div className="flex justify-center gap-3">
+                            <button
+                              onClick={() => openEditModal(u)}
+                              className="px-3 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            >
+                              Update
+                            </button>
+                            <button
+                              onClick={() => {
+                                setUserToDelete(u);
+                                setShowDeleteConfirm(true);
+                              }}
+                              className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             )}
           </motion.div>
+          {totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-6">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className="px-3 py-1 border rounded-lg disabled:opacity-40"
+              >
+                Prev
+              </button>
+
+              {Array.from({ length: totalPages }).map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1 rounded-lg border ${
+                    currentPage === i + 1 ? "bg-black text-white" : "bg-white"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                className="px-3 py-1 border rounded-lg disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          )}
 
           <div className="mt-6">
             <MemberStatsChart members={members} />
@@ -301,9 +383,7 @@ export default function Dashboard() {
       {showDeleteConfirm && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-white rounded-2xl p-6 w-[90%] max-w-sm text-center">
-            <h3 className="text-xl font-bold mb-3">
-              Confirm Delete
-            </h3>
+            <h3 className="text-xl font-bold mb-3">Confirm Delete</h3>
             <p className="mb-6">
               Delete <b>{userToDelete?.name}</b> ?
             </p>

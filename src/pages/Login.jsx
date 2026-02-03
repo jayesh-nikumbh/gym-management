@@ -73,15 +73,14 @@ export default function Login() {
             type="email"
             placeholder="Email address"
             className="w-full p-3 rounded-lg border 
-border-gray-300 dark:border-gray-600
-bg-white dark:bg-gray-900
-text-black dark:text-white
-placeholder-gray-400 dark:placeholder-gray-400
-focus:outline-none 
-focus:border-red-500 dark:focus:border-red-500
-focus:ring-2 focus:ring-red-500/40
-transition
-"
+            border-gray-300 dark:border-gray-600
+            bg-white dark:bg-gray-900
+            text-black dark:text-white
+            placeholder-gray-400 dark:placeholder-gray-400
+            focus:outline-none 
+            focus:border-red-500 dark:focus:border-red-500
+            focus:ring-2 focus:ring-red-500/40
+            transition" 
             onChange={handleChange}
             required
           />
@@ -91,15 +90,14 @@ transition
             type="password"
             placeholder="Password"
             className="w-full p-3 rounded-lg border 
-border-gray-300 dark:border-gray-600
-bg-white dark:bg-gray-900
-text-black dark:text-white
-placeholder-gray-400 dark:placeholder-gray-400
-focus:outline-none 
-focus:border-red-500 dark:focus:border-red-500
-focus:ring-2 focus:ring-red-500/40
-transition
-"
+            border-gray-300 dark:border-gray-600
+            bg-white dark:bg-gray-900
+            text-black dark:text-white
+            placeholder-gray-400 dark:placeholder-gray-400
+            focus:outline-none 
+            focus:border-red-500 dark:focus:border-red-500
+            focus:ring-2 focus:ring-red-500/40
+            transition"
             onChange={handleChange}
             required
           />

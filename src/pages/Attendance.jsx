@@ -172,6 +172,7 @@ export default function Attendance() {
             whileHover={{ scale: 1.03 }}
             onClick={() => setShowPassword(true)}
             className="w-full py-3 rounded-xl font-semibold bg-green-600 hover:bg-green-700"
+            
           >
             Mark Attendance
           </motion.button>
@@ -179,8 +180,8 @@ export default function Attendance() {
 
         {marked && (
           <button
-            disabled
             className="w-full py-3 rounded-xl font-semibold bg-gray-600 cursor-not-allowed"
+            type="submit"
           >
             Attendance Marked
           </button>
